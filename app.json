@@ -16,10 +16,21 @@
         "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "pe.edu.pam.billymark2004.pushlab",
+      "googleServicesFile": "./google-services.json"
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "plugins": [
+      "expo-notifications"
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "b1ce1d96-2e8a-4ef3-aac4-7735e66c8000"
+      }
+    },
+    "owner": "billy2004"
   }
 }

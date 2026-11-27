@@ -1,3 +1,4 @@
+import Constants from 'expo-constants';
 import { Platform } from 'react-native';
 import * as Notifications from 'expo-notifications';
 
@@ -24,7 +25,6 @@ export async function ensureNotificationPermission(): Promise<boolean> {
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
       if (!message.includes('NullPointerException')) throw error;
-      // Permite usar el canal predeterminado si falla la creación nativa en Expo Go.
       useCustomChannel = false;
       console.warn('No se pudo crear el canal de laboratorio:', message);
     }
@@ -52,4 +52,17 @@ export async function showLocalNotification(): Promise<void> {
       channelId: useCustomChannel ? CHANNEL_ID : undefined,
     },
   });
+}
+
+export async function getExpoPushToken(): Promise<string> {
+  const allowed = await ensureNotificationPermission();
+  if (!allowed) throw new Error('Permiso denegado');
+  if (!useCustomChannel) {
+    throw new Error('No se creó el canal laboratorio. Abre la compilación de desarrollo, no Expo Go.');
+  }
+  const projectId = Constants.expoConfig?.extra?.eas?.projectId ??
+    Constants.easConfig?.projectId;
+  if (!projectId) throw new Error('Falta projectId de EAS');
+  const result = await Notifications.getExpoPushTokenAsync({ projectId });
+  return result.data;
 }
